@@ -1,15 +1,14 @@
 import json
-import uvicorn
 import numpy as np
 import pandas as pd
 from pathlib import Path
 from typing import List
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 # pylint: disable=no-name-in-module
 from pydantic import BaseModel
 
-from fastapi.middleware.cors import CORSMiddleware
 from data_processing import data_path, stat_file_path
 from forecasting import (df_to_single_supervised, two_step_forecasting, get_kde_estimations, df_to_multi_supervised,
                          get_mean_feature_importance)
@@ -100,8 +99,3 @@ def get_cluster_results():
     Get full cluster list
     """
     return {row["currency"]: row["clusters"] for _, row in cluster_df.iterrows()}
-
-
-if __name__ == "__main__":
-    uvicorn.run("main:app", host="localhost", port=80,
-                log_level="info", reload=True)
